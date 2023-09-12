@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>detector</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/style.css') }}"
+        />
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('detector.index') }}">物体検知アプリ</a>
+                {% if url_for(request.endpoint) == url_for('detector.index') or url_for(request.endpoint) == url_for('detector.search') %}
+                <div class="btn-group">
+                  <form method="get" action="{{ url_for('detector.search') }}" name="dtSearchForm" class="d-flex align-items-center">
+                      <div class="input-group">
+                            <input type="text" class="form-control" name="search" list="labels" placeholder="初めに検索ボタンを押してください" autocomplete="off" size="40">
+                            <input id="sbtn" type="submit" value="検索" />
+                            <datalist id="labels">
+                                {% for label in labels %}
+                                <option value="{{ label }}"></option>
+                                {% endfor %}
+                            </datalist>
+                      </div>
+                  </form>
+                </div>
+                {% endif %}
+
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link">{{ current_user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('auth.logout') }}" class="nav-link">ログアウト</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.signup') }}">新規登録</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">ログイン</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        <section class="container">
+            {% block content %}{% endblock %}
+        </section>
+    </body>
+</html>
